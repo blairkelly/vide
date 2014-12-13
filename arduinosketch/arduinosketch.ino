@@ -1,5 +1,21 @@
-#include <math.h>         //loads the more advanced math functions
- 
+#define     SERIES_RESISTOR    470000  // Series resistor value in ohms.
+#define     USE_FAHRENHEIT     true   // True to use Fahrenheit, false to
+#define     ADC_SAMPLES        5      // Number of ADC samples to average
+                                      // when taking a reading.
+
+// Temperature unit conversion functions and state.
+typedef float (*TempConversion)(float);
+TempConversion ToKelvin; 
+TempConversion FromKelvin;
+char* TempUnit;
+
+ // Steinhart-Hart coefficients.
+float A = 0.006559355258;
+float B = -0.000233063483;
+float C = -0.000000000979;
+
+
+
 //com
 String sBuffer = "";
 String usbInstructionDataString = "";
@@ -8,13 +24,24 @@ boolean USBcommandExecuted = true;
 String usbCommand = "";
 
 //timing
-int thermistor_read_delay = 500;
+int thermistor_read_delay = 200;
 unsigned long last_thermistor_readtime = 0;
 
 void setup() {            //This function gets called when the Arduino starts
     pinMode(8, OUTPUT);
     digitalWrite(8, HIGH); //off
     Serial.begin(57600);   //This code sets up the Serial port at 115200 baud rate
+
+    if (USE_FAHRENHEIT) {
+        ToKelvin = &fahrenheitToKelvin;
+        FromKelvin = &kelvinToFahrenheit;
+        TempUnit = "Fahrenheit";
+    }
+    else {
+        ToKelvin = &celsiusToKelvin;
+        FromKelvin = &kelvinToCelsius;
+        TempUnit = "Celsius";
+    }
 }
  
 double Thermister(int RawADC) {  //Function to perform the fancy math of the Steinhart-Hart equation
@@ -27,7 +54,6 @@ double Thermister(int RawADC) {  //Function to perform the fancy math of the Ste
     return Temp;
 }
 
-/*functions*/
 void printsbuffer () {
     //print sBuffer
     if(sBuffer != "") {
@@ -56,8 +82,8 @@ void delegate(String cmd, int cmdval) {
 
     if (cmd.equals("d")) {
         thermistor_read_delay = cmdval;
-        if (thermistor_read_delay < 80) {
-            thermistor_read_delay = 80;
+        if (thermistor_read_delay < 50) {
+            thermistor_read_delay = 50;
         } else if (thermistor_read_delay > 5000) {
             thermistor_read_delay = 5000;
         }
@@ -102,11 +128,45 @@ void serialListen()
     }
 }
 
+
+
+double readResistance(int thermistor_pin) {
+    float reading = 0;
+    for (int i = 0; i < ADC_SAMPLES; ++i) {
+        reading += analogRead(thermistor_pin);
+    }
+    reading /= (float)ADC_SAMPLES;
+    reading = (1023 / reading) - 1;
+    return SERIES_RESISTOR / reading;
+}
+
+float kelvinToFahrenheit(float kelvin) {
+    return kelvin*(9.0/5.0) - 459.67;
+}
+
+float fahrenheitToKelvin(float fahrenheit) {
+    return (fahrenheit + 459.67)*(5.0/9.0);
+}
+
+float kelvinToCelsius(float kelvin) {
+    return kelvin - 273.15;
+}
+
+float celsiusToKelvin(float celsius) {
+    return celsius + 273.15; 
+}
+
+float readTemp(int thermistor_pin) {
+    float R = readResistance(thermistor_pin);
+    float kelvin = 1.0/(A + B*log(R) + C*pow(log(R), 3.0));
+    return kelvin;
+}
+
 void readThermistors()
 {
     if ( (millis() - thermistor_read_delay) > last_thermistor_readtime ) {
-        addtosbuffer("t0", String(analogRead(0)));
-        addtosbuffer("t1", String(analogRead(1)));
+        float first_thermistor_temp = FromKelvin(readTemp(0));
+        addtosbuffer("t0", String( first_thermistor_temp ));
         last_thermistor_readtime = millis();
     }
     

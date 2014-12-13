@@ -1,0 +1,6 @@
+Calibration Coefficient Values
+
+Coefficient A = 0.006559355258
+Coefficient B = -0.000233063483
+Coefficient C = -0.000000000979
+
