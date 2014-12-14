@@ -6,6 +6,7 @@ var http = require('http');
 var express = require('express');
 var cookieParser = require('cookie-parser')
 var session = require('express-session')
+var serialcoms = require('./modules/serialcoms');
 
 var app = express();           // start Express framework
 
@@ -23,10 +24,13 @@ app.use(express.static(path.join(__dirname + '/public')));
 
 
 var server = http.createServer(app); // start an HTTP server
+var io = require('socket.io')(server);
 server.listen(process.env.PORT || 3000);
 
 module.exports = {
     app: app,
+    serialcoms: serialcoms,
+    io: io,
 };
 
 //routes

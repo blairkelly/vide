@@ -14,8 +14,6 @@ float A = 0.006559355258;
 float B = -0.000233063483;
 float C = -0.000000000979;
 
-
-
 //com
 String sBuffer = "";
 String usbInstructionDataString = "";
