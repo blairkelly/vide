@@ -1,6 +1,7 @@
 var app = module.parent.exports.app;
 var sport = module.parent.exports.serialcoms;
 var io = module.parent.exports.io;
+var moment = module.parent.exports.moment;
 
 var gt1 = 160;
 var gt2 = 160;
