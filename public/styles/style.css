@@ -1,2 +1,63 @@
 body {
-  background: #666; }
+  background: #fff;
+  font-family: 'Open Sans' !important;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px; }
+
+.title {
+  font-size: 22px;
+  font-weight: 600; }
+
+.container {
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 15px;
+  width: 90%;
+  background-color: rgba(0, 0, 0, 0.06); }
+
+.thermistors {
+  margin-top: 20px;
+  overflow: auto; }
+  .thermistors > div {
+    width: 50%;
+    float: left;
+    text-align: center; }
+  .thermistors .tempdisplay {
+    margin-top: 15px;
+    font-size: 50px;
+    font-weight: 800; }
+  .thermistors .goaltemp {
+    margin-top: 15px; }
+    .thermistors .goaltemp input {
+      margin-right: 15px; }
+  .thermistors span.display {
+    font-size: 20px; }
+  .thermistors span.ctrl {
+    font-weight: 600;
+    margin: 0 12px;
+    cursor: pointer; }
+    .thermistors span.ctrl:active {
+      color: lightgrey; }
+
+.powerstatus {
+  font-size: 30px;
+  font-weight: 400;
+  margin: 30px auto;
+  text-align: center; }
+  .powerstatus > span.on {
+    color: skyblue; }
+  .powerstatus > span.off {
+    color: #111; }
+
+.powercontrol {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 700;
+  margin-top: 30px auto; }
+  .powercontrol > div {
+    cursor: pointer;
+    display: inline-block;
+    margin: 10px 30px; }
+    .powercontrol > div:active {
+      color: grey; }

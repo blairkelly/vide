@@ -22,7 +22,7 @@ boolean USBcommandExecuted = true;
 String usbCommand = "";
 
 //timing
-int thermistor_read_delay = 200;
+int thermistor_read_delay = 500;
 unsigned long last_thermistor_readtime = 0;
 
 void setup() {            //This function gets called when the Arduino starts
@@ -165,6 +165,8 @@ void readThermistors()
     if ( (millis() - thermistor_read_delay) > last_thermistor_readtime ) {
         float first_thermistor_temp = FromKelvin(readTemp(0));
         addtosbuffer("t0", String( first_thermistor_temp ));
+        float second_thermistor_temp = FromKelvin(readTemp(1));
+        addtosbuffer("t1", String( second_thermistor_temp ));
         last_thermistor_readtime = millis();
     }
     

@@ -1,4 +1,22 @@
 extends ../../layouts/main
 
 block body
-	span basic boilerplate
+    .container
+        .title Thermistors
+        .thermistors
+            .thermlabel.thermlabel-1 Internal
+            .thermlabel.thermlabel-2 Bath
+            .tempdisplay.thermistor_1 nan
+            .tempdisplay.thermistor_2 nan
+            .goaltemp.goaltemp-1
+                span.ctrl.down DOWN
+                span.display Current value
+                span.ctrl.up UP
+            .goaltemp.goaltemp-2
+                span.ctrl.down DOWN
+                span.display Current value
+                span.ctrl.up UP
+        .powerstatus Power Status: <span>No Status</span>
+        .powercontrol
+            .turnon AUTO
+            .turnoff OFF

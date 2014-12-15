@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname + '/public')));
 
 var server = http.createServer(app); // start an HTTP server
 var io = require('socket.io')(server);
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 5700);
 
 module.exports = {
     app: app,
