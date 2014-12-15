@@ -34,17 +34,18 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
+    var jump = 1;
     socket.on('gt1down', function(data) {
-        gt1-=5;
+        gt1-=jump;
     });
     socket.on('gt1up', function(data) {
-        gt1+=5;
+        gt1+=jump;
     });
     socket.on('gt2down', function(data) {
-        gt2-=5;
+        gt2-=jump;
     });
     socket.on('gt2up', function(data) {
-        gt2+=5;
+        gt2+=jump;
     });
 });
 
@@ -94,18 +95,18 @@ sport.on("open", function () {
         }
 
         if(pst_ctrl == 'auto') {
-            if (t0 > gt1) {
+            if (t0 >= gt1) {
                 if (pst_status) {
                     sport.write('p0\r');
                 }
             }
             else if (t0 < gt1) {
-                if( t1 > (gt2+3) ) {
+                if( t1 >= (gt2+2) ) {
                     if (pst_status) {
                         sport.write('p0\r');
                     }
                 }
-                else if (t1 < (gt2-3)) {
+                else if (t1 < (gt2-2)) {
                     if (!pst_status) {
                         sport.write('p1\r');
                     }
