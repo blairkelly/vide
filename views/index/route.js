@@ -7,6 +7,15 @@ var gt2 = 145;
 var pst_status = false;
 var pst_ctrl = 'auto';
 
+var gt1_array = [];
+
+var t0 = 0;
+var t1 = 0;
+
+var thermreads = 4;
+
+var gt2_array = [];
+
 io.sockets.on('connection', function(socket) {
     console.log("Client: " + socket.handshake.headers.host + " @ " + (new Date()));
 
@@ -59,19 +68,47 @@ sport.on("open", function () {
             pst_status = parseInt(params.powerswitchtail);
         }
 
-        var t0 = parseInt(params.t0);
-        var t1 = parseInt(params.t1);
+        if (params.t0) {
+            gt1_array.push(parseInt(params.t0));
+            if (gt1_array.length > thermreads) {
+                gt1_array.shift();
+            }
+            var gt1_total = 0;
+            for (var i=0; i<gt1_array.length; i++) {
+                gt1_total+=gt1_array[i];
+            }
+            t0 = parseInt(gt1_total/gt1_array.length);
+            
+        }
+        if (params.t1) {
+            gt2_array.push(parseInt(params.t1));
+            if (gt2_array.length > thermreads) {
+                gt2_array.shift();
+            }
+            var gt2_total = 0;
+            for (var i=0; i<gt2_array.length; i++) {
+                gt2_total+=gt2_array[i];
+            }
+            t1 = parseInt(gt2_total/gt2_array.length);
+            //console.log(params.t1, t1);
+        }
 
         if(pst_ctrl == 'auto') {
             if (t0 > gt1) {
-                sport.write('p0\r');
+                if (pst_status) {
+                    sport.write('p0\r');
+                }
             }
             else if (t0 < gt1) {
                 if( t1 > (gt2+3) ) {
-                    sport.write('p0\r');
+                    if (pst_status) {
+                        sport.write('p0\r');
+                    }
                 }
                 else if (t1 < (gt2-3)) {
-                    sport.write('p1\r');
+                    if (!pst_status) {
+                        sport.write('p1\r');
+                    }
                 }
             }
         }
@@ -80,6 +117,8 @@ sport.on("open", function () {
             meatpi: params,
             gt1: gt1,
             gt2: gt2,
+            t0: t0,
+            t1: t1,
             pst_status: pst_status
         });
     });

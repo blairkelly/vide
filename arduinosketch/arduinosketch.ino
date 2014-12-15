@@ -22,7 +22,7 @@ boolean USBcommandExecuted = true;
 String usbCommand = "";
 
 //timing
-int thermistor_read_delay = 500;
+int thermistor_read_delay = 250;
 unsigned long last_thermistor_readtime = 0;
 
 void setup() {            //This function gets called when the Arduino starts

@@ -11,8 +11,8 @@ app_socket.on('info', function(data) {
     if (data.meatpi) {
 
         if(data.meatpi.t0) {
-            $('.thermistor_1').text(parseFloat(data.meatpi.t0).toFixed(1));
-            $('.thermistor_2').text(parseFloat(data.meatpi.t1).toFixed(1));
+            $('.thermistor_1').text(parseFloat(data.t0).toFixed(1));
+            $('.thermistor_2').text(parseFloat(data.t1).toFixed(1));
 
             $('.goaltemp-1 span.display').text(data.gt1);
             $('.goaltemp-2 span.display').text(data.gt2);
