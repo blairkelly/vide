@@ -95,4 +95,21 @@ body {
             color: grey;
         }
     }
+
+    &.off {
+        .turnoff {
+
+        }
+        .turnon {
+            opacity: 0.2;
+        }
+    }
+    &.auto {
+        .turnoff {
+            opacity: 0.2;
+        }
+        .turnon {
+            color: skyblue;
+        }
+    }
 }

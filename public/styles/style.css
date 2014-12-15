@@ -61,3 +61,9 @@ body {
     margin: 10px 30px; }
     .powercontrol > div:active {
       color: grey; }
+  .powercontrol.off .turnon {
+    opacity: 0.2; }
+  .powercontrol.auto .turnoff {
+    opacity: 0.2; }
+  .powercontrol.auto .turnon {
+    color: skyblue; }

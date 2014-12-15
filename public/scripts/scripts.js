@@ -24,6 +24,12 @@ app_socket.on('info', function(data) {
         else if (!data.pst_status) {
             $('.powerstatus span').removeClass('on').addClass('off').text("OFF");
         }
+
+        if (data.pst_ctrl == 'auto') {
+            $('.powercontrol').removeClass('off').addClass('auto');
+        } else {
+            $('.powercontrol').addClass('off').removeClass('auto');
+        }
     }
 });
 

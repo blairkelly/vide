@@ -2,8 +2,8 @@ var app = module.parent.exports.app;
 var sport = module.parent.exports.serialcoms;
 var io = module.parent.exports.io;
 
-var gt1 = 145;
-var gt2 = 145;
+var gt1 = 160;
+var gt2 = 160;
 var pst_status = false;
 var pst_ctrl = 'auto';
 
@@ -101,12 +101,12 @@ sport.on("open", function () {
                 }
             }
             else if (t0 < gt1) {
-                if( t1 >= (gt2+2) ) {
+                if( t1 > (gt2+1) ) {
                     if (pst_status) {
                         sport.write('p0\r');
                     }
                 }
-                else if (t1 < (gt2-2)) {
+                else if (t1 < gt2) {
                     if (!pst_status) {
                         sport.write('p1\r');
                     }
@@ -120,7 +120,8 @@ sport.on("open", function () {
             gt2: gt2,
             t0: t0,
             t1: t1,
-            pst_status: pst_status
+            pst_status: pst_status,
+            pst_ctrl: pst_ctrl,
         });
     });
 });
