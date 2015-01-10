@@ -6,8 +6,8 @@ var moment = module.parent.exports.moment;
 var switchdelay = 9000;
 var just_switched = false;
 
-var gt1 = 160;
-var gt2 = 160;
+var gt1 = 130;
+var gt2 = 140;
 var pst_status = false;
 var pst_ctrl = 'auto';
 
