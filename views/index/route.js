@@ -150,8 +150,9 @@ var create_listeners = function () {
 }
 
 setTimeout(function () {
+    console.log("Opening serialport...");
     sport = scoms.new_serialport();
-}, 27000);
+}, 9999);
 
 app.get('/', function (req, res) {
 	res.render('index/index.jade');
