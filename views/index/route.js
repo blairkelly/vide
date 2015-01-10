@@ -152,6 +152,7 @@ var create_listeners = function () {
 setTimeout(function () {
     console.log("Opening serialport...");
     sport = scoms.new_serialport();
+    create_listeners();
 }, 9999);
 
 app.get('/', function (req, res) {
