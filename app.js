@@ -1,5 +1,5 @@
 //vide
-
+var config = require('./config');
 var path = require('path');
 var find = require('find');  //was specified for route, but not in registry.
 var http = require('http');
@@ -7,7 +7,6 @@ var express = require('express');
 var cookieParser = require('cookie-parser')
 var session = require('express-session')
 var serialcoms = require('./modules/serialcoms');
-var moment = require('moment');
 
 var app = express();           // start Express framework
 
@@ -29,10 +28,10 @@ var io = require('socket.io')(server);
 server.listen(process.env.PORT || 5700);
 
 module.exports = {
+    config: config,
     app: app,
     serialcoms: serialcoms,
-    io: io,
-    moment: moment,
+    io: io
 };
 
 //routes

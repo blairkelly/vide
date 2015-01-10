@@ -1,10 +1,13 @@
-var serialcoms = {}
+var config = require('../config');
+var serialcoms = {};
+
+console.log("Serial address: " + config.serialaddress);
 
 var serialport = require("serialport"),     // include the serialport library
     SerialPort = serialport.SerialPort,      // make a local instance of serial
     serialData = {};                    // object to hold what goes out to the client
 
-var the_serialport = new SerialPort("/dev/tty.usbmodem1421", { 
+var the_serialport = new SerialPort(config.serialaddress, { 
     baudrate: 57600,
     // look for return and newline at the end of each data packet:
     parser: serialport.parsers.readline("\r\n") 
