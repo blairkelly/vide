@@ -3,6 +3,9 @@ var sport = module.parent.exports.serialcoms;
 var io = module.parent.exports.io;
 var moment = module.parent.exports.moment;
 
+var switchdelay = 9000;
+var just_switched = false;
+
 var gt1 = 160;
 var gt2 = 160;
 var pst_status = false;
@@ -16,6 +19,17 @@ var t1 = 0;
 var thermreads = 4;
 
 var gt2_array = [];
+
+var handle_switchdelay = function () {
+    if (just_switched) {
+        setTimeout(function () {
+            just_switched = false;
+        }, switchdelay);
+    }
+    else {
+        just_switched = true;
+    }
+}
 
 io.sockets.on('connection', function(socket) {
     console.log("Client: " + socket.handshake.headers.host + " @ " + (new Date()));
@@ -56,6 +70,7 @@ sport.on("open", function () {
     console.log('opened serial port');
 
     sport.write('p0\r');
+    handle_switchdelay();
 
     sport.on('data', function (data) {
         var pairs = data.split('&');
@@ -95,21 +110,24 @@ sport.on("open", function () {
             //console.log(params.t1, t1);
         }
 
-        if(pst_ctrl == 'auto') {
+        if(pst_ctrl == 'auto' && !just_switched) {
             if (t0 >= gt1) {
                 if (pst_status) {
                     sport.write('p0\r');
+                    handle_switchdelay();
                 }
             }
             else if (t0 < gt1) {
                 if( t1 > (gt2+1) ) {
                     if (pst_status) {
                         sport.write('p0\r');
+                        handle_switchdelay();
                     }
                 }
                 else if (t1 < gt2) {
                     if (!pst_status) {
                         sport.write('p1\r');
+                        handle_switchdelay();
                     }
                 }
             }
