@@ -20,7 +20,7 @@ var thermreads = 4;
 
 var gt2_array = [];
 
-var sport;
+var sport = null;
 
 var handle_switchdelay = function () {
     if (!just_switched) {
@@ -33,41 +33,40 @@ var handle_switchdelay = function () {
     }
 }
 
-var create_listeners = function () {
-    io.sockets.on('connection', function(socket) {
-        console.log("Client: " + socket.handshake.headers.host + " @ " + (new Date()));
+io.sockets.on('connection', function(socket) {
+    console.log("Client: " + socket.handshake.headers.host + " @ " + (new Date()));
 
-        socket.emit('welcome', { 
-            message: 'Welcome to Vide',
-            address: socket.handshake.headers.host
-        });
-
-        socket.on('pst_control', function(data) {
-            if (data) {
-                pst_ctrl = 'auto';
-            }
-            else {
-                pst_ctrl = 'off';
-                sport.write('p0\r');
-            }
-        });
-
-        var jump = 1;
-        socket.on('gt1down', function(data) {
-            gt1-=jump;
-        });
-        socket.on('gt1up', function(data) {
-            gt1+=jump;
-        });
-        socket.on('gt2down', function(data) {
-            gt2-=jump;
-        });
-        socket.on('gt2up', function(data) {
-            gt2+=jump;
-        });
+    socket.emit('welcome', { 
+        message: 'Welcome to Vide',
+        address: socket.handshake.headers.host
     });
 
+    socket.on('pst_control', function(data) {
+        if (data) {
+            pst_ctrl = 'auto';
+        }
+        else if (sport) {
+            pst_ctrl = 'off';
+            sport.write('p0\r');
+        }
+    });
 
+    var jump = 1;
+    socket.on('gt1down', function(data) {
+        gt1-=jump;
+    });
+    socket.on('gt1up', function(data) {
+        gt1+=jump;
+    });
+    socket.on('gt2down', function(data) {
+        gt2-=jump;
+    });
+    socket.on('gt2up', function(data) {
+        gt2+=jump;
+    });
+});
+
+var create_serialport_listeners = function () {
     sport.on("open", function () {
         var message = null;
         console.log('opened serial port');
@@ -152,7 +151,7 @@ var create_listeners = function () {
 setTimeout(function () {
     console.log("Opening serialport...");
     sport = scoms.new_serialport();
-    create_listeners();
+    create_serialport_listeners();
 }, 9999);
 
 app.get('/', function (req, res) {
