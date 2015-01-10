@@ -21,15 +21,13 @@ var thermreads = 4;
 var gt2_array = [];
 
 var handle_switchdelay = function () {
-    if (just_switched) {
+    if (!just_switched) {
+        just_switched = true;
+        console.log("just_switched set to TRUE");
         setTimeout(function () {
             just_switched = false;
             console.log("just_switched set to FALSE");
         }, switchdelay);
-    }
-    else {
-        just_switched = true;
-        console.log("just_switched set to TRUE");
     }
 }
 
