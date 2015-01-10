@@ -24,10 +24,12 @@ var handle_switchdelay = function () {
     if (just_switched) {
         setTimeout(function () {
             just_switched = false;
+            console.log("just_switched set to FALSE");
         }, switchdelay);
     }
     else {
         just_switched = true;
+        console.log("just_switched set to TRUE");
     }
 }
 
