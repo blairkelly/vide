@@ -3,7 +3,7 @@ var scoms = module.parent.exports.serialcoms;
 var io = module.parent.exports.io;
 var moment = module.parent.exports.moment;
 
-var switchdelay = 9000;
+var switchdelay = 27000;
 var just_switched = false;
 
 var gt1 = 135;
@@ -72,7 +72,6 @@ var create_serialport_listeners = function () {
         console.log('opened serial port');
 
         sport.write('p0\r');
-        handle_switchdelay();
 
         sport.on('data', function (data) {
             var pairs = data.split('&');
@@ -152,7 +151,7 @@ setTimeout(function () {
     console.log("Opening serialport...");
     sport = scoms.new_serialport();
     create_serialport_listeners();
-}, 9999);
+}, 5000);
 
 app.get('/', function (req, res) {
 	res.render('index/index.jade');
