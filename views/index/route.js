@@ -5,8 +5,8 @@ var moment = module.parent.exports.moment;
 
 var sport = null;
 
-var gt1 = 135;
-var gt2 = 160;
+var gt1 = 137;
+var gt2 = 145;
 var pst_status = false;
 var pst_ctrl = 'auto';
 
@@ -111,7 +111,6 @@ var create_serialport_listeners = function () {
                     if (pst_status) {
                         if (!t0_meet_time) {
                             t0_meet_time = moment();
-                            console.log("Set t0_meet_time: " + t0_meet_time);
                         }
                         else {
                             if (now.diff(t0_meet_time, 'seconds') > t0_meet_delay) {
@@ -129,7 +128,6 @@ var create_serialport_listeners = function () {
                         if (pst_status) {
                             if (!t1_meet_time) {
                                 t1_meet_time = moment();
-                                console.log("Set t1_meet_time: " + t1_meet_time);
                             }
                             else {
                                 if (now.diff(t1_meet_time, 'seconds') > t1_meet_delay) {
@@ -144,7 +142,6 @@ var create_serialport_listeners = function () {
                         if (!pst_status) {
                             if (!t1_below_time) {
                                 t1_below_time = moment();
-                                console.log("Set t1_below_time: " + t1_below_time);
                             }
                             else {
                                 if (now.diff(t1_below_time, 'seconds') > t1_below_delay) {
