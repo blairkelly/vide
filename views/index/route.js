@@ -103,7 +103,6 @@ var create_serialport_listeners = function () {
                     gt2_total+=gt2_array[i];
                 }
                 t1 = parseInt(gt2_total/gt2_array.length);
-                //console.log(params.t1, t1);
             }
 
             if(pst_ctrl == 'auto') {
