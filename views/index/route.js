@@ -3,35 +3,28 @@ var scoms = module.parent.exports.serialcoms;
 var io = module.parent.exports.io;
 var moment = module.parent.exports.moment;
 
-var switchdelay = 27000;
-var just_switched = false;
+var sport = null;
 
 var gt1 = 135;
-var gt2 = 180;
+var gt2 = 160;
 var pst_status = false;
 var pst_ctrl = 'auto';
 
 var gt1_array = [];
+var gt2_array = [];
 
 var t0 = 0;
 var t1 = 0;
 
 var thermreads = 4;
 
-var gt2_array = [];
+var t0_meet_time = null;
+var t1_meet_time = null;
+var t1_below_time = null;
 
-var sport = null;
-
-var handle_switchdelay = function () {
-    if (!just_switched) {
-        just_switched = true;
-        console.log("just_switched set to TRUE");
-        setTimeout(function () {
-            just_switched = false;
-            console.log("just_switched set to FALSE");
-        }, switchdelay);
-    }
-}
+var t0_meet_delay = 60; //number of seconds t0 must remain at target temperature before switch.
+var t1_meet_delay = 60; //number of seconds t1 must remain at target temperature before switch.
+var t1_below_delay = 60; //number of seconds t1 must remain below target temperature before switch.
 
 io.sockets.on('connection', function(socket) {
     console.log("Client: " + socket.handshake.headers.host + " @ " + (new Date()));
@@ -77,6 +70,8 @@ var create_serialport_listeners = function () {
             var pairs = data.split('&');
             var pieces = null;
             var params = {};
+            var now = moment();
+
             for(var i = 0; i<pairs.length; i++) {
                 pieces = pairs[i].split('=');
                 params[pieces[0]] = pieces[1];
@@ -111,24 +106,51 @@ var create_serialport_listeners = function () {
                 //console.log(params.t1, t1);
             }
 
-            if(pst_ctrl == 'auto' && !just_switched) {
-                if (t0 >= gt1) {
+            if(pst_ctrl == 'auto') {
+                if ( t0 >= gt1 ) {
                     if (pst_status) {
-                        sport.write('p0\r');
-                        handle_switchdelay();
-                    }
-                }
-                else if (t0 < gt1) {
-                    if( t1 > (gt2+1) ) {
-                        if (pst_status) {
-                            sport.write('p0\r');
-                            handle_switchdelay();
+                        if (!t0_meet_time) {
+                            t0_meet_time = moment();
+                            console.log("Set t0_meet_time: " + t0_meet_time);
+                        }
+                        else {
+                            if (now.diff(t0_meet_time, 'seconds') > t0_meet_delay) {
+                                sport.write('p0\r');
+                            }
                         }
                     }
-                    else if (t1 < gt2) {
+                }
+                else if ( t0 < gt1 ) {
+                    t0_meet_time = null;
+
+                    if ( t1 >= gt2 ) {
+                        t1_below_time = null;
+
+                        if (pst_status) {
+                            if (!t1_meet_time) {
+                                t1_meet_time = moment();
+                                console.log("Set t1_meet_time: " + t1_meet_time);
+                            }
+                            else {
+                                if (now.diff(t1_meet_time, 'seconds') > t1_meet_delay) {
+                                    sport.write('p0\r');
+                                }
+                            }
+                        }
+                    }
+                    else if ( t1 < gt2 ) {
+                        t1_meet_time = null;
+
                         if (!pst_status) {
-                            sport.write('p1\r');
-                            handle_switchdelay();
+                            if (!t1_below_time) {
+                                t1_below_time = moment();
+                                console.log("Set t1_below_time: " + t1_below_time);
+                            }
+                            else {
+                                if (now.diff(t1_below_time, 'seconds') > t1_below_delay) {
+                                    sport.write('p1\r');
+                                }
+                            }
                         }
                     }
                 }
@@ -146,6 +168,8 @@ var create_serialport_listeners = function () {
         });
     });
 }
+
+var tingle = moment();
 
 setTimeout(function () {
     console.log("Opening serialport...");
