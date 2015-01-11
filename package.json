@@ -25,6 +25,7 @@
     "node-sass": "~1.2.2",
     "node-watch": "~0.3.4",
     "serialport": "^1.4.9",
-    "socket.io": "^1.2.1"
+    "socket.io": "^1.2.1",
+    "moment": "^2.9.0"
   }
 }
